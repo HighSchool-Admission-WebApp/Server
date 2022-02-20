@@ -25,18 +25,18 @@ const signup_model = mongoose.model("stud_signup",signup_Schema);
 
 //-------------Home Route
 app.get("/",function(req,res){
-  res.sendFile(__dirname + "/signup.html");
+  res.sendFile(__dirname + "/studentsignup.html");
 });
 
 
 
 //-------------Login Route
 
-app.get("/login",function(req,res){
-   res.sendFile(__dirname + "/login.html")
+app.get("/studentlogin",function(req,res){
+   res.sendFile(__dirname + "/studentlogin.html")
 });
 
-app.post("/login",function(req,res){
+app.post("/studentlogin",function(req,res){
 
     const uname = req.body.username;
     const pass = req.body.password;
@@ -58,7 +58,7 @@ app.post("/login",function(req,res){
 
 
 //--------------Sign-up Route
-app.post("/signup",function(req,res){
+app.post("/studentsignup",function(req,res){
 
   const uname = req.body.username;
   const pass = req.body.password;

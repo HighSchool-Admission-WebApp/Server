@@ -8,9 +8,9 @@ app.use(bodyparser.urlencoded({extended : true}));
 
 
 //---------------Mongoose Set-up
-mongoose.connect("mongodb://localhost:27017/HM",{useNewUrlParser : true});
+mongoose.connect("mongodb+srv://hsam:lXZkeArAfdvRoqmG@cluster0.7ddj5.mongodb.net/HSAMDB?retryWrites=true&w=majority",{useNewUrlParser:true });
 
-const signup_Schema = {
+const signupSchema = {
   username : {
     type : String,
     required : true
@@ -21,7 +21,7 @@ const signup_Schema = {
   }
 }
 
-const signup_model = mongoose.model("stud_signup",signup_Schema);
+const signupmodel = mongoose.model("studentsignup",signupSchema);
 
 //-------------Home Route
 app.get("/",function(req,res){
@@ -41,7 +41,7 @@ app.post("/studentlogin",function(req,res){
     const uname = req.body.username;
     const pass = req.body.password;
 
-    signup_model.findOne({username:uname},function(err,data){
+    signupmodel.findOne({username:uname},function(err,data){
        if(!data){
         console.log("Signup first!");
        }else{
@@ -63,12 +63,12 @@ app.post("/studentsignup",function(req,res){
   const uname = req.body.username;
   const pass = req.body.password;
 
-  const signup_data = new signup_model({
+  const signupdata = new signup_model({
      username : uname,
      password : pass
   });
 
-  signup_data.save(function(err){
+  signupdata.save(function(err){
     if(!err){
       console.log("Data Added Sucessfully!");
     }else{

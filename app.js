@@ -10,22 +10,39 @@ app.use(bodyparser.urlencoded({extended : true}));
 
 
 //---------------Mongoose Set-up
-//mongoose.connect("mongodb+srv://hsam:lXZkeArAfdvRoqmG@cluster0.7ddj5.mongodb.net/HSAMDB?retryWrites=true&w=majority",{useNewUrlParser:true });
+mongoose.connect("mongodb+srv://hsam:lXZkeArAfdvRoqmG@cluster0.7ddj5.mongodb.net/HSAMDB?retryWrites=true&w=majority",{useNewUrlParser:true });
 
-mongoose.connect("mongodb+srv://Admin_Aditya:123-aditya@cluster0.qxxwb.mongodb.net/HSAMDB?retryWrites=true&w=majority",{useNewUrlParser : true});
-
+//----------------------studentsignup schema & model
 const signupSchema = {
     email : {
     type : String,
-    required : true
+    required : true,
+    unique : true
   },
   password : {
     type : String,
-    required : true
+    required : true,
+    unique : true
+
   }
 }
 
-const signupmodel = mongoose.model("studentsignup",signupSchema);
+const signupmodel = mongoose.model("studentsignupdata",signupSchema);
+
+
+//----------------------adminlogin schema & model
+
+const adminSchema = {
+   email : {
+    type : String,
+  },
+  password :{
+    type : String,
+  }
+}
+
+const adminmodel = mongoose.model("adminlogindata",adminSchema);
+
 
 //-------------Home Route
 app.get("/",function(req,res){
@@ -88,6 +105,36 @@ app.post("/studentsignup",function(req,res){
         }
       });
     });
+
+});
+
+//---------------------Admin login
+
+app.post("/adminlogin",function(req,res){
+   const email = req.body.email;
+   const password = req.body.password;
+
+  adminmodel.findOne({email:email},function(err,founddata){
+    if(err){
+      console.log(err);
+    }else{
+      if(founddata){
+         bcrypt.compare(password,founddata.password,function(err,result){
+           if(err){
+             console.log(err);
+           }else{
+             if(result==true){
+               console.log("Admin login Sucessfully");
+             }else{
+               console.log("Incorrect username or password");
+             }
+           }
+         });
+      }else{
+        console.log("notfound admin!");
+      }
+    }
+  });
 
 });
 

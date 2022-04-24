@@ -1,0 +1,13 @@
+<<<<<<< HEAD
+/node_modules
+npm-debug.log
+/*.env
+=======
+<<<<<<< HEAD
+/node_modules
+npm-debug.log
+/*.env
+=======
+*node_modules/*
+>>>>>>> 52ff412 (Handel api request)
+>>>>>>> 87b54d0 (First commit)

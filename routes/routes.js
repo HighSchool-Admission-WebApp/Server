@@ -35,7 +35,7 @@ app.route("/getstudentinfo")
   //    console.log(req.files);
   // });
 
-  .post("/poststudentinfo", upload.fields([{ name: "profile" }, { name: "cast_certificate" }, { name: "tenth_marksheet" }, { name: "tenth_lc" }, { name: "domicile" }]), (req, res) => {
+  app.post("/poststudentinfo", upload.fields([{ name: "profile" }, { name: "cast_certificate" }, { name: "tenth_marksheet" }, { name: "tenth_lc" }, { name: "domicile" }]), (req, res) => {
     console.log(req.body.name);
    // console.log(req.body.email);
     //console.log(req.files.file);

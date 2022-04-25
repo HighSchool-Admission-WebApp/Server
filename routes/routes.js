@@ -1,3 +1,5 @@
+const { findById } = require("../models/documentschema.js");
+
 module.exports = function (app) {
 
   const express = require("express");
@@ -35,7 +37,8 @@ app.route("/getstudentinfo")
   //    console.log(req.files);
   // });
 
-  app.post("/poststudentinfo", upload.fields([{ name: "profile" }, { name: "cast_certificate" }, { name: "tenth_marksheet" }, { name: "tenth_lc" }, { name: "domicile" }]), (req, res) => {
+  app.route("/poststudentinfo")
+  .post(upload.fields([{ name: "profile" }, { name: "cast_certificate" }, { name: "tenth_marksheet" }, { name: "tenth_lc" }, { name: "domicile" }]), (req, res) => {
     console.log(req.body.name);
    // console.log(req.body.email);
     //console.log(req.files.file);
@@ -91,6 +94,19 @@ app.route("/getstudentinfo")
       console.log("select files");
     }
 
+  });
+
+  app.route("/deletestudentinfo/:id")
+  .get((req,res)=>{
+    //const id = "6266becab1350c2800ae4702";
+    const id = (req.params.id);
+     docmodel.findByIdAndDelete(id,(err,docs)=>{
+      if(!err){
+        console.log(docs);
+      }else{
+        console.log(err);
+      }
+     });
   });
 
 }

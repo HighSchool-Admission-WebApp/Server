@@ -36,6 +36,6 @@ const docSchema = mongoose.Schema({
 });
 
 
-const docmodel = mongoose.model("StudentDoc",docSchema);
+const docmodel = mongoose.model("Studentdoc",docSchema);
 
 module.exports = docmodel;

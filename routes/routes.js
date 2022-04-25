@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 module.exports = function(app){
 
@@ -100,7 +99,6 @@ app.post("/adminlogin",function(req,res){
 
 
 }
-=======
 
 module.exports = function(app){
 
@@ -198,4 +196,3 @@ app.get("/", (req, res) => {
   });
 
 }
->>>>>>> 87b54d0 (First commit)

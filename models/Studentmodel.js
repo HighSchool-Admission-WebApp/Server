@@ -1,36 +1,31 @@
 const mongoose = require("mongoose");
 
 const docSchema = mongoose.Schema({
+  UID : {
+    type : String
+  },
    Name : {
      type : String,
    },
-   DOB : {
-     type : Date,
+   Email : {
+     type : String,
    },
    Address : {
      type : String,
    },
-   Mobile_No :{
-     type : Number,
-     maxLength:10,
-     minLength:10
+   SchoolName :{
+     type : String,
    },
-   Tenth_Marks :{
+   TenthMarks :{
      type : Number,
    },
-   Profile : {
+   TenthMarksheet : {
      type : String,
    },
-   Cast_Certificate :{
+   CastCertificate :{
      type : String,
    },
-   Tenth_Marksheet:{
-     type : String,
-   },
-   Tenth_LC:{
-     type : String,
-   },
-   Domicile_Certificate:{
+   incomeCertificate:{
      type : String,
    }
 });

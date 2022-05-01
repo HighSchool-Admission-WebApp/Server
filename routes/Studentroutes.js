@@ -1,43 +1,34 @@
 
-module.exports = function (app) {
-
   const express = require("express");
+  const router = express.Router();
   const mongoose = require("mongoose");
-  const bodyparser = require("body-parser");
-  const multer = require("multer");
-  const cors = require("cors");
-  const docmodel = require("../models/Studentmodel.js");
+  const Studentmodel = require("../models/Studentmodel.js");
   const upload = require("../middleware/documents.js");
 
-  app.use("/poststudentinfo", express.static("Middleware/Uploads"));
-  app.use(bodyparser.urlencoded({ extended: true }));
-  app.use(cors());
-  app.use(express.json());
+
+  router.route("/")
+    .get((req, res) => {
+      Studentmodel.find({}, (err, data) => {
+        if (!err) {
+          res.status(200).send({
+            StudentData : data,
+            msg : "Sucess"
+          });
+          console.log("Sucess!");
+        } else {
+          res.status(400).send({
+            msg : "Error in database! try agian"
+          });
+          console.log(err);
+        }
+      });
+    })
 
 
-  app.route("/")
-  .get((req, res) => {
-    res.sendFile(__dirname + "/form.html");
-  });
+  router.route("/")
+    .post(upload.fields([{ name: "markSheet10th" }, { name: "incomeCertificate" }, { name: "castCertificate" }]), (req, res) => {
 
-
-app.route("/getstudentinfo")
-  .get((req, res) => {
-    docmodel.find({}, (err, data) => {
-      if (!err) {
-        console.log(data);
-      } else {
-        console.log(err);
-      }
-    });
-  })
-
-
-  app.route("/poststudentinfo")
-  .post(upload.fields([{ name: "markSheet10th" }, { name: "incomeCertificate" }, { name: "castCertificate" }]), (req, res) => {
-    console.log(req.body);
-
-    if (req.files) {
+      console.log(req.body.cast);
       let tenthmarksheet = req.files.markSheet10th;
       let incomeCertificate = req.files.incomeCertificate;
       let castCertificate = req.files.castCertificate;
@@ -50,47 +41,94 @@ app.route("/getstudentinfo")
         incomeCertificate = element.filename;
       });
 
-      castCertificate.forEach(element => {
+      if(req.body.cast!="open"){
+        castCertificate.forEach(element => {
         castCertificate = element.filename;
       });
+      }else{
+        castCertificate = "NULL";
+      }
 
+      Studentmodel.findOne({ UID: req.body.uid }, (err, result) => {
+        if (!result) {
+          console.log("user not found");
 
-      const data = new docmodel({
-        UID : req.body.uid,
-        Name: req.body.name,
-        Email : req.body.email,
-        Address: req.body.address,
-        SchoolName : req.body.schoolName,
-        TenthMarks: req.body.marks10th,
-        TenthMarksheet: tenthmarksheet,
-        CastCertificate: castCertificate,
-        incomeCertificate: incomeCertificate,
-      });
+          const data = new Studentmodel({
+            UID: req.body.uid,
+            Name: req.body.name,
+            DOB:req.body.birthDate,
+            Gender:req.body.gender,
+            Email: req.body.email,
+            Address: req.body.address,
+            SchoolName: req.body.schoolName,
+            TenthMarks: req.body.marks10th,
+            TenthMarksheet: tenthmarksheet,
+            Cast: req.body.cast,
+            CastCertificate: castCertificate,
+            incomeCertificate: incomeCertificate,
+          });
 
-      data.save((err) => {
-        if (!err) {
-          console.log("sucess!");
+          data.save((err) => {
+            if (!err) {
+              res.status(200).send({
+                 msg : "UserData Uploaded Sucessfully"
+              });
+              console.log("Data Uploaded Sucessfully!");
+            } else {
+              res.status(500).send({
+                msg : "Somthing went wrong try agian!"
+             });
+              console.log(err);
+            }
+          });
         } else {
-          console.log(err);
+          let data = {
+            $set: {
+              Name: req.body.name,
+              DOB:req.body.birthDate,
+              Gender:req.body.gender,
+              Email: req.body.email,
+              Address: req.body.address,
+              SchoolName: req.body.schoolName,
+              TenthMarks: req.body.marks10th,
+              TenthMarksheet: tenthmarksheet,
+              Cast: req.body.cast,
+              CastCertificate: castCertificate,
+              incomeCertificate: incomeCertificate,
+            }
+          };
+          Studentmodel.updateMany({ UID: req.body.uid }, data, (err, result) => {
+            if (!err) {
+              res.status(200).send({
+                msg : "User Updated Sucessfully"
+              });
+              console.log("User Updated Sucessfully!");
+            } else {
+              res.status(400).send({
+                msg : "Somthing went wrong try agian!"
+             });
+              console.log(err);
+            }
+          });
         }
       });
-    } else {
-      console.log("select files");
-    }
 
-   });
 
-  app.route("/deletestudentinfo/:id")
-  .get((req,res)=>{
-    //const id = "6266becab1350c2800ae4702";
-    const id = (req.params.id);
-     docmodel.findByIdAndDelete(id,(err,docs)=>{
-      if(!err){
-        console.log(docs);
-      }else{
-        console.log(err);
-      }
-     });
-  });
+    });
 
-}
+  // router.route("/:id")
+  //   .get((req, res) => {
+  //     //const id = "6266becab1350c2800ae4702";
+  //     const id = (req.params.id);
+  //     Studentmodel.findByIdAndDelete(id, (err, docs) => {
+  //       if (!err) {
+  //         console.log(docs);
+  //       } else {
+  //         console.log(err);
+  //       }
+  //     });
+  //   });
+
+  
+ module.exports = router;   
+

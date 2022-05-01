@@ -7,6 +7,12 @@ const docSchema = mongoose.Schema({
    Name : {
      type : String,
    },
+   DOB : {
+     type: String,
+   },
+   Gender :{
+     type : String,
+   },
    Email : {
      type : String,
    },
@@ -20,6 +26,9 @@ const docSchema = mongoose.Schema({
      type : Number,
    },
    TenthMarksheet : {
+     type : String,
+   },
+   Cast : {
      type : String,
    },
    CastCertificate :{

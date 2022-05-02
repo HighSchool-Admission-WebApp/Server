@@ -3,23 +3,30 @@ const bodyparser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const app = express();
-
-
-//---------------Mongoose Set-up
- mongoose.connect("mongodb+srv://HSAM:HSAM_123@cluster0.x4isl.mongodb.net/HSAMDB?retryWrites=true&w=majority",{useNewUrlParser:true });
 
 const Studentroutes = require("./routes/Studentroutes.js")
 const Adminroutes = require("./routes/Adminroutes.js");
 
 
-app.use("/poststudentinfo", express.static("Middleware/Uploads"));
-app.use(bodyparser.urlencoded({extended : false}));
+const app = express();
+
+
+app.use(bodyparser.urlencoded({extended : true}));
+app.use(bodyparser.json()); 
 app.use(cors());
 
-app.use("/adminlogin",Adminroutes);
+//---------------Mongoose Set-up
+ mongoose.connect("mongodb+srv://HSAM:HSAM_123@cluster0.x4isl.mongodb.net/HSAMDB?retryWrites=true&w=majority",{useNewUrlParser:true });
+
+
+
+app.use("/poststudentinfo", express.static("Middleware/Uploads"));
+  
+
+
+app.use("/admin",Adminroutes);
 app.use("/getstudentdata",Adminroutes);
-app.use("/getstudentinfo",Studentroutes);
+app.use("/getstudentinfo/:id",Studentroutes);
 app.use("/poststudentinfo",Studentroutes);
 //app.use("/deletestudentinfo",Studentroutes);
 

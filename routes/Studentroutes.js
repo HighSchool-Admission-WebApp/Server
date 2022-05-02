@@ -8,7 +8,9 @@
 
   router.route("/")
     .get((req, res) => {
-      Studentmodel.find({}, (err, data) => {
+      // console.log()
+      const id = req.baseUrl.split("/")[2];
+      Studentmodel.find({Id:id}, (err, data) => {
         if (!err) {
           res.status(200).send({
             StudentData : data,

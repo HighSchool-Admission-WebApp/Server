@@ -6,11 +6,10 @@
   const upload = require("../middleware/documents.js");
 
 
-  router.route("/")
-    .get((req, res) => {
-      // console.log()
-      const id = req.baseUrl.split("/")[2];
-      Studentmodel.find({Id:id}, (err, data) => {
+  router.route("/:id")    
+  .get((req, res) => {
+    console.log(req.params.id)
+      Studentmodel.find({UID:req.params.id}, (err, data) => {
         if (!err) {
           res.status(200).send({
             StudentData : data,
@@ -26,6 +25,10 @@
       });
     })
 
+    router.route("/")
+    .get((req,res)=>{
+        res.render("ShowFiles");
+    });
 
   router.route("/")
     .post(upload.fields([{ name: "markSheet10th" }, { name: "incomeCertificate" }, { name: "castCertificate" }]), (req, res) => {

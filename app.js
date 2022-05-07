@@ -20,10 +20,10 @@ app.use(cors());
   
 
 app.use("/admin",Adminroutes);
-app.use("/getstudentdata",Adminroutes);
+app.use("/getAllStudents",Adminroutes);
+
 app.use("/getstudentinfo",Studentroutes);
 app.use("/poststudentinfo",Studentroutes);
-app.use("/showfiles",Studentroutes);
 //app.use("/deletestudentinfo",Studentroutes);
 
 

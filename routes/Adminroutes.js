@@ -4,25 +4,24 @@ const adminmodel = require("../models/Adminmodel");
 const Studentmodel = require("../models/Studentmodel.js");
 
 router.get("/", (req, res) => {
-    res.render("ShowFiles");
-//    Studentmodel.find({},(err,result)=>{
-//       if(!err){
-//           if(result){
-//             res.status(200).send({
-//                 result
-//              });
-//              console.log(result);
-//           }else{
-//             res.status(403).send({
-//                 msg : "No any Student Data Found!"
-//              });
-//           }
-//       }else{
-//         res.status(400).send({
-//             msg : "Something went wrong !Pls Try Agian Later"
-//          });
-//       }
-//    });
+   Studentmodel.find({},(err,result)=>{
+      if(!err){
+          if(result){
+            res.json({
+                result
+             });
+            // console.log(result);
+          }else{
+            res.json({
+                msg : "No any Student Data Found!"
+             });
+          }
+      }else{
+        res.json({
+            msg : "Something went wrong !Pls Try Agian Later"
+         });
+      }
+   });
 });
 
 router.post("/", (req, res) => {

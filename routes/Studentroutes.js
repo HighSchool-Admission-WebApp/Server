@@ -8,7 +8,7 @@ const upload = require("../middleware/documents.js");
 
 router.route("/:id")
   .get((req, res) => {
-    console.log(req.params.id)
+   // console.log(req.params.id)
     Studentmodel.find({ UID: req.params.id }, (err, data) => {
       if (!err) {
         res.status(200).send({

@@ -3,13 +3,13 @@ const router = express.Router();
 const adminmodel = require("../models/Adminmodel");
 const Studentmodel = require("../models/Studentmodel.js");
 
-router.get("/", (req, res) => {
+router.get("/getAllStudents", (req, res) => {
     Studentmodel.find({}, (err, result) => {
         if (!err) {
             if (result) {
-                res.json({
+                res.json(
                     result
-                });
+                );
                 // console.log(result);
             } else {
                 res.json({
@@ -25,7 +25,7 @@ router.get("/", (req, res) => {
 });
 
 
-router.route("/:id")
+router.route("/getStudent/:id")
     .get((req, res) => {
         // console.log(req.params.id)
         Studentmodel.findOne({ UID: req.params.id }, (err, data) => {
@@ -49,7 +49,7 @@ router.route("/:id")
         });
     })
 
-router.post("/", (req, res) => {
+router.post("/hsam-admin", (req, res) => {
     // console.log(req)
     adminmodel.findOne({ Email: req.body.email, Password: req.body.password }, (err, result) => {
         console.log(req.body)

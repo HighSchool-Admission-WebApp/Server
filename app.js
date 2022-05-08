@@ -20,8 +20,6 @@ app.use(cors());
   
 
 app.use("/admin",Adminroutes);
-app.use("/getAllStudents",Adminroutes);
-app.use("/getStudent",Adminroutes);
 
 app.use("/getstudentinfo",Studentroutes);
 app.use("/poststudentinfo",Studentroutes);

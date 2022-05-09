@@ -13,7 +13,16 @@ const docSchema = mongoose.Schema({
    Gender :{
      type : String,
    },
+   MobileNo : {
+     type : String,
+   },
    Email : {
+     type : String,
+   },
+   FatherName : {
+     type : String,
+   },
+   FatherMobile : {
      type : String,
    },
    Address : {
@@ -28,10 +37,19 @@ const docSchema = mongoose.Schema({
    TenthMarksheet : {
      type : String,
    },
+   LeavingCertificate : {
+     type : String,
+   },
+   Religion : {
+     type : String,
+   },
    Cast : {
      type : String,
    },
    CastCertificate :{
+     type : String,
+   },
+   AnnualIncome : {
      type : String,
    },
    incomeCertificate:{

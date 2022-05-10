@@ -4,18 +4,41 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Studentmodel = require("../models/Studentmodel.js");
 const upload = require("../middleware/documents.js");
-
+const acceptmodel = require("../models/Accepedtstudent.js");
+const rejectmodel = require("../models/Rejectedstudent.js");
 
 router.route("/:id")
   .get((req, res) => {
-   // console.log(req.params.id)
+    console.log(req.params.id)
     Studentmodel.find({ UID: req.params.id }, (err, data) => {
       if (!err) {
-        res.status(200).send({
-          StudentData: data,
-          msg: "Sucess"
-        });
-        console.log("Sucess!");
+        if (data) {
+          res.status(200).send({
+            StudentData: data,
+            msg: "Sucess"
+          });
+          console.log("Sucess!");
+        } else {
+          acceptmodel.find({ UID: req.params.id }, (err, data) => {
+            if (data) {
+              res.status(200).send({
+                StudentData: data,
+                msg: "Sucess"
+              });
+              console.log("Sucess!");
+            } else {
+              rejectmodel.find({ UID: req.params.id }, (err, data) => {
+                if (data) {
+                  res.status(200).send({
+                    StudentData: data,
+                    msg: "Sucess"
+                  });
+                  console.log("Sucess!");
+                }
+              });
+            }
+          });
+        }
       } else {
         res.status(400).send({
           msg: "Error in database! try agian"
@@ -25,10 +48,6 @@ router.route("/:id")
     });
   })
 
-router.route("/")
-  .get((req, res) => {
-    res.render("ShowFiles");
-  });
 
 router.route("/")
   .post(upload.fields([{ name: "markSheet10th" }, { name: "incomeCertificate" }, { name: "castCertificate" }]), (req, res) => {
@@ -91,28 +110,28 @@ router.route("/")
           }
         });
       } else {
-          
+
         if (req.files) {
           console.log("Hello");
-        
+
           tenthmarksheet = req.files.markSheet10th;
           incomeCertificate = req.files.incomeCertificate;
           castCertificate = req.files.castCertificate;
 
-          if(tenthmarksheet!=undefined){
+          if (tenthmarksheet != undefined) {
             tenthmarksheet.forEach(element => {
               tenthmarksheet = element.filename;
             });
           }
 
-          if(incomeCertificate!=undefined){
-             incomeCertificate.forEach(element => {
-            incomeCertificate = element.filename;
-          });
+          if (incomeCertificate != undefined) {
+            incomeCertificate.forEach(element => {
+              incomeCertificate = element.filename;
+            });
           }
 
           if (req.body.cast != "open") {
-            if(castCertificate!=undefined){
+            if (castCertificate != undefined) {
               castCertificate.forEach(element => {
                 castCertificate = element.filename;
               });

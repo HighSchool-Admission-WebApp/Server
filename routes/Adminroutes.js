@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const adminmodel = require("../models/Adminmodel");
 const Studentmodel = require("../models/Studentmodel.js");
+const acceptmodel = require("../models/Accepedtstudent.js");
+const rejectmodel = require("../models/Rejectedstudent.js");
 
 router.get("/getAllStudents", (req, res) => {
     Studentmodel.find({}, (err, result) => {
@@ -75,5 +77,113 @@ router.post("/hsam-admin", (req, res) => {
         }
     });
 });
+
+router.post("/student/accept", (req, res) => {
+    // console.log(req.params.id);
+    //const uid = req.body.UID;
+    Studentmodel.findOne({ UID: req.body.id }, (err, Data) => {
+        if (!err) {
+            if (Data) {
+                acceptmodel.find({ UID: req.body.id }, (err, data) => {
+                    if (!data) {
+                        const acceptstud = new acceptmodel({
+                            UID: Data.UID,
+                            Name: Data.Name,
+                            DOB: Data.DOB,
+                            Gender: Data.Gender,
+                            Email: Data.Email,
+                            Address: Data.Address,
+                            SchoolName: Data.SchoolName,
+                            TenthMarks: Data.TenthMarks,
+                            TenthMarksheet: Data.TenthMarksheet,
+                            Cast: Data.Cast,
+                            CastCertificate: Data.CastCertificate,
+                            incomeCertificate: Data.incomeCertificate,
+                        });
+
+                        acceptstud.save((err) => {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log("Sucess!");
+                            }
+                        });
+                    }
+                })
+            } else {
+                res.json({
+                    mag: "Studnet Not Found"
+                });
+            }
+        } else {
+            res.json({
+                msg: "error in database!"
+            })
+            console.log(err);
+        }
+    });
+
+    Studentmodel.delete({ UID: req.body.id }, (err) => {
+        if (!err) {
+            console.log("Data Remove!");
+        } else {
+            console.log(err);
+        }
+    });
+});
+
+router.post("/student/reject", (req, res) => {
+    Studentmodel.find({ UID: req.body.id }, (err, Data) => {
+        if (!err) {
+            if (Data) {
+                rejectmodel.find({ UID: req.body.id }, (err, data) => {
+                    if (!data) {
+                        const rejectstud = new rejectmodel({
+                            UID: Data.UID,
+                            Name: Data.Name,
+                            DOB: Data.DOB,
+                            Gender: Data.Gender,
+                            Email: Data.Email,
+                            Address: Data.Address,
+                            SchoolName: Data.SchoolName,
+                            TenthMarks: Data.TenthMarks,
+                            TenthMarksheet: Data.TenthMarksheet,
+                            Cast: Data.Cast,
+                            CastCertificate: Data.CastCertificate,
+                            incomeCertificate: Data.incomeCertificate,
+                        });
+
+                        rejectstud.save((err) => {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log("Sucess!");
+                            }
+                        });
+                    }
+                });
+            } else {
+                res.json({
+                    mag: "Studnet Not Found"
+                })
+            }
+        } else {
+            res.json({
+                msg: "error in database!"
+            })
+            console.log(err);
+        }
+    });
+
+    Studentmodel.deleteOne({ UID: req.body.id }, (err) => {
+        if (!err) {
+            console.log("Data Remove!");
+        } else {
+            console.log(err);
+        }
+    });
+
+});
+
 
 module.exports = router;

@@ -79,36 +79,36 @@ router.post("/hsam-admin", (req, res) => {
 });
 
 router.post("/student/accept", (req, res) => {
-    // console.log(req.params.id);
-    //const uid = req.body.UID;
-    Studentmodel.findOne({ UID: req.body.id }, (err, Data) => {
+    console.log(req.body.UID);
+    Studentmodel.findOne({ UID: req.body.UID }, (err, Data) => {
         if (!err) {
             if (Data) {
-                acceptmodel.find({ UID: req.body.id }, (err, data) => {
-                    if (!data) {
-                        const acceptstud = new acceptmodel({
-                            UID: Data.UID,
-                            Name: Data.Name,
-                            DOB: Data.DOB,
-                            Gender: Data.Gender,
-                            Email: Data.Email,
-                            Address: Data.Address,
-                            SchoolName: Data.SchoolName,
-                            TenthMarks: Data.TenthMarks,
-                            TenthMarksheet: Data.TenthMarksheet,
-                            Cast: Data.Cast,
-                            CastCertificate: Data.CastCertificate,
-                            incomeCertificate: Data.incomeCertificate,
-                        });
-
-                        acceptstud.save((err) => {
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                console.log("Sucess!");
-                            }
-                        });
-                    }
+                acceptmodel.findOne({ UID: req.body.UID}, (err, result) => { 
+                        if (!result) {  
+                            const acceptstud = new acceptmodel({
+                                UID: Data.UID,
+                                Name: Data.Name,
+                                DOB: Data.DOB,
+                                Gender: Data.Gender,
+                                Email: Data.Email,
+                                Address: Data.Address,
+                                SchoolName: Data.SchoolName,
+                                TenthMarks: Data.TenthMarks,
+                                TenthMarksheet: Data.TenthMarksheet,
+                                Cast: Data.Cast,
+                                CastCertificate: Data.CastCertificate,
+                                incomeCertificate: Data.incomeCertificate,
+                            });
+    
+                            acceptstud.save((err) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log("Save");
+                                }
+                            });
+                        }
+                    
                 })
             } else {
                 res.json({
@@ -123,7 +123,7 @@ router.post("/student/accept", (req, res) => {
         }
     });
 
-    Studentmodel.delete({ UID: req.body.id }, (err) => {
+    Studentmodel.deleteOne({ UID: req.body.UID }, (err) => {
         if (!err) {
             console.log("Data Remove!");
         } else {
@@ -133,11 +133,14 @@ router.post("/student/accept", (req, res) => {
 });
 
 router.post("/student/reject", (req, res) => {
-    Studentmodel.find({ UID: req.body.id }, (err, Data) => {
+
+    Studentmodel.findOne({ UID: req.body.UID }, (err, Data) => {
         if (!err) {
             if (Data) {
-                rejectmodel.find({ UID: req.body.id }, (err, data) => {
+                //  console.log(Data);
+                rejectmodel.findOne({ UID: req.body.UID }, (err, data) => {
                     if (!data) {
+                       // console.log(Data.Name);
                         const rejectstud = new rejectmodel({
                             UID: Data.UID,
                             Name: Data.Name,
@@ -157,7 +160,7 @@ router.post("/student/reject", (req, res) => {
                             if (err) {
                                 console.log(err);
                             } else {
-                                console.log("Sucess!");
+                                console.log("Save!");
                             }
                         });
                     }
@@ -175,7 +178,7 @@ router.post("/student/reject", (req, res) => {
         }
     });
 
-    Studentmodel.deleteOne({ UID: req.body.id }, (err) => {
+    Studentmodel.deleteOne({ UID: req.body.UID }, (err) => {
         if (!err) {
             console.log("Data Remove!");
         } else {

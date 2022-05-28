@@ -58,7 +58,7 @@ const acceptSchema = mongoose.Schema({
 });
 
 
-const acceptstudent = mongoose.model("acceptedstudent",acceptSchema);
+const acceptstudents = mongoose.model("acceptedstudent",acceptSchema);
 
-module.exports = acceptstudent;
+module.exports = acceptstudents;
 

@@ -58,6 +58,6 @@ const rejectSchema = mongoose.Schema({
 });
 
 
-const rejectstudent = mongoose.model("rejectedstudent",rejectSchema);
+const rejectstudents = mongoose.model("rejectedstudent",rejectSchema);
 
-module.exports = rejectstudent;
+module.exports = rejectstudents;

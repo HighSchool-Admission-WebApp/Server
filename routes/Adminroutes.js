@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const router = express.Router();
 const adminmodel = require("../models/Adminmodel");
@@ -5,6 +7,8 @@ const Studentmodel = require("../models/Studentmodel.js");
 const acceptmodel = require("../models/Accepedtstudent.js");
 const rejectmodel = require("../models/Rejectedstudent.js");
 const mailer = require("../middleware/nodemailer.js");
+const AcceptText = require("../MailMessage/acceptmessage.js");
+const RejectText = require("../MailMessage/rejectmessage.js")
 
 router.get("/getAllStudents", (req, res) => {
     Studentmodel.find({}, (err, result) => {
@@ -78,52 +82,51 @@ router.post("/student/accept", (req, res) => {
         if (!err) {
             if (Data) {
                 console.log(Data.UID);
-                acceptmodel.findOne({ UID: req.body.UID}, (err, result) => { 
-                        if (!result) {  
-                            const acceptstud = new acceptmodel({
-                                UID: Data.UID,
-                                Name: Data.Name,
-                                DOB: Data.DOB,
-                                Gender: Data.Gender,
-                                Email: Data.Email,
-                                Address: Data.Address,
-                                SchoolName: Data.SchoolName,
-                                TenthMarks: Data.TenthMarks,
-                                TenthMarksheet: Data.TenthMarksheet,
-                                Cast: Data.Cast,
-                                CastCertificate: Data.CastCertificate,
-                                incomeCertificate: Data.incomeCertificate,
-                            });
-    
-                            acceptstud.save((err) => {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                    var mailOptions = {
-                                        from: 'hsadmissionmanagement@gmail.com',
-                                        to: Data.Email,
-                                        subject: 'Application Accepted',
-                                        text: `Hello!
-                                        Thank you for applying for admission through admission management system. We are happy to inform you that your application has been accepted in our highschool.
-                                        You will have to visit the college with original documents for further process of admission before 27th May 2022
-                                        We wish you the best and look forward interacting with you.
-                                
-                                        Regards
-                                        HSAM`
-                                      };
-                                      
-                                      mailer.sendMail(mailOptions, function(error, info){
-                                        if (error) {
-                                          console.log(error);
-                                        } else {
-                                          console.log('Email sent: ' + info.response);
-                                        }
-                                      });
-                                    console.log("Save");
-                                }
-                            });
-                        }
-                    
+                acceptmodel.findOne({ UID: req.body.UID }, (err, result) => {
+                    if (!result) {
+                        const acceptstud = new acceptmodel({
+                            UID: req.body.uid,
+                            Name: req.body.name,
+                            DOB: req.body.birthDate,
+                            Gender: req.body.gender,
+                            MobileNo: req.body.studentMobNo,
+                            Email: req.body.email,
+                            FatherName: req.body.fatherName,
+                            FatherMobile: req.body.fatherMobNo,
+                            Address: req.body.address,
+                            SchoolName: req.body.schoolName,
+                            TenthMarks: req.body.marks10th,
+                            TenthMarksheet: tenthmarksheet,
+                            LeavingCertificate: leavingCertificate,
+                            Cast: req.body.cast,
+                            CastCertificate: castCertificate,
+                            AnnualIncome: req.body.annualIncome,
+                            incomeCertificate: incomeCertificate,
+                        });
+
+                        acceptstud.save((err) => {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                var mailOptions = {
+                                    from: process.env.USER,
+                                    to: Data.Email,
+                                    subject: 'Application Accepted',
+                                    text: AcceptText
+                                };
+
+                                mailer.sendMail(mailOptions, function (error, info) {
+                                    if (error) {
+                                        console.log(error);
+                                    } else {
+                                        console.log('Email sent: ' + info.response);
+                                    }
+                                });
+                                console.log("Save");
+                            }
+                        });
+                    }
+
                 })
             } else {
                 res.json({
@@ -155,20 +158,25 @@ router.post("/student/reject", (req, res) => {
                 //  console.log(Data);
                 rejectmodel.findOne({ UID: req.body.UID }, (err, data) => {
                     if (!data) {
-                       // console.log(Data.Name);
+                        // console.log(Data.Name);
                         const rejectstud = new rejectmodel({
-                            UID: Data.UID,
-                            Name: Data.Name,
-                            DOB: Data.DOB,
-                            Gender: Data.Gender,
-                            Email: Data.Email,
-                            Address: Data.Address,
-                            SchoolName: Data.SchoolName,
-                            TenthMarks: Data.TenthMarks,
-                            TenthMarksheet: Data.TenthMarksheet,
-                            Cast: Data.Cast,
-                            CastCertificate: Data.CastCertificate,
-                            incomeCertificate: Data.incomeCertificate,
+                            UID: req.body.uid,
+                            Name: req.body.name,
+                            DOB: req.body.birthDate,
+                            Gender: req.body.gender,
+                            MobileNo: req.body.studentMobNo,
+                            Email: req.body.email,
+                            FatherName: req.body.fatherName,
+                            FatherMobile: req.body.fatherMobNo,
+                            Address: req.body.address,
+                            SchoolName: req.body.schoolName,
+                            TenthMarks: req.body.marks10th,
+                            TenthMarksheet: tenthmarksheet,
+                            LeavingCertificate: leavingCertificate,
+                            Cast: req.body.cast,
+                            CastCertificate: castCertificate,
+                            AnnualIncome: req.body.annualIncome,
+                            incomeCertificate: incomeCertificate,
                         });
 
                         rejectstud.save((err) => {
@@ -176,24 +184,19 @@ router.post("/student/reject", (req, res) => {
                                 console.log(err);
                             } else {
                                 var mailOptions = {
-                                    from: 'hsadmissionmanagement@gmail.com',
+                                    from: process.env.USER,
                                     to: Data.Email,
                                     subject: 'Application Rejected',
-                                    text: `Hello!
-                                    Thank you for applying for admission through admission management system. We are sorry to inform you that your application has been REJECTED in our highschool.
-                                    We wish you the best for your future applications and you can reapply for CAP-2 before 27th May 2022
-                                    
-                                    Regards
-                                    HSAM`
-                                  };
-                                  
-                                  mailer.sendMail(mailOptions, function(error, info){
+                                    text: RejectText
+                                };
+
+                                mailer.sendMail(mailOptions, function (error, info) {
                                     if (error) {
-                                      console.log(error);
+                                        console.log(error);
                                     } else {
-                                      console.log('Email sent: ' + info.response);
+                                        console.log('Email sent: ' + info.response);
                                     }
-                                  });
+                                });
                                 console.log("Save");
                             }
                         });

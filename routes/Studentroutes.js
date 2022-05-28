@@ -1,3 +1,4 @@
+require('dotenv').config();
 
 const express = require("express");
 const router = express.Router();
@@ -9,31 +10,31 @@ const rejectmodel = require("../models/Rejectedstudent.js");
 
 router.route("/:id")
   .get((req, res) => {
-    console.log(req.params.id)
-    Studentmodel.find({ UID: req.params.id }, (err, data) => {
+    console.log(req.params.id);
+    Studentmodel.findOne({ UID: req.params.id }, (err, data) => {
       if (!err) {
         if (data) {
           res.status(200).send({
             StudentData: data,
-            msg: "Sucess"
+            msg: "Sucess!"
           });
-          console.log("Sucess!");
+          console.log("Sucess");
         } else {
-          acceptmodel.find({ UID: req.params.id }, (err, data) => {
+          acceptmodel.findOne({ UID: req.params.id }, (err, data) => {
             if (data) {
               res.status(200).send({
                 StudentData: data,
-                msg: "Sucess"
+                msg: "Sucess!!"
               });
               console.log("Sucess!");
             } else {
-              rejectmodel.find({ UID: req.params.id }, (err, data) => {
+              rejectmodel.findOne({ UID: req.params.id }, (err, data) => {
                 if (data) {
                   res.status(200).send({
                     StudentData: data,
-                    msg: "Sucess"
+                    msg: "Sucess!!!"
                   });
-                  console.log("Sucess!");
+                  console.log("Sucess!!");
                 }
               });
             }
@@ -52,7 +53,6 @@ router.route("/:id")
 router.route("/")
   .post(upload.fields([{ name: "markSheet10th" }, { name: "incomeCertificate" }, { name: "castCertificate" },{ name: "leavingCertificate" }]), (req, res) => {
 
-    console.log(req.body);
     let tenthmarksheet;
     let incomeCertificate;
     let castCertificate;
@@ -61,8 +61,6 @@ router.route("/")
     Studentmodel.findOne({ UID: req.body.uid }, (err, result) => {
       if (!result) {
         console.log("user not found");
-
-        console.log(req.files.incomeCertificate);
 
         tenthmarksheet = req.files.markSheet10th;
         incomeCertificate = req.files.incomeCertificate;
@@ -123,12 +121,9 @@ router.route("/")
             console.log(err);
           }
         });
-        console.log(req.body.fatherName);
       } else {
-
+        console.log("by");
         if (req.files) {
-          console.log("Hello");
-
           tenthmarksheet = req.files.markSheet10th;
           incomeCertificate = req.files.incomeCertificate;
           castCertificate = req.files.castCertificate;
@@ -185,12 +180,12 @@ router.route("/")
         };
         Studentmodel.updateMany({ UID: req.body.uid }, data, (err, result) => {
           if (!err) {
-            res.status(200).send({
+            res.json({
               msg: "User Updated Sucessfully"
             });
             console.log("User Updated Sucessfully!");
           } else {
-            res.status(400).send({
+            res.json({
               msg: "Somthing went wrong try agian!"
             });
             console.log(err);

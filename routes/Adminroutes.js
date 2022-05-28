@@ -4,6 +4,7 @@ const adminmodel = require("../models/Adminmodel");
 const Studentmodel = require("../models/Studentmodel.js");
 const acceptmodel = require("../models/Accepedtstudent.js");
 const rejectmodel = require("../models/Rejectedstudent.js");
+const mailer = require("../middleware/nodemailer.js");
 
 router.get("/getAllStudents", (req, res) => {
     Studentmodel.find({}, (err, result) => {
@@ -56,19 +57,12 @@ router.post("/hsam-admin", (req, res) => {
     adminmodel.findOne({ Email: req.body.email, Password: req.body.password }, (err, result) => {
         console.log(req.body)
         if (result) {
-            // res.status(200).send({
-            //     ID : result._id,
-            //     msg : "Valid Username And Password"
-            // });
             res.json({
                 Id: result._id,
                 msg: "valid usrname and password"
             })
             console.log("Login Sucessfully!");
         } else {
-            // res.status(401).send({
-            //     msg : "Invalid Username Or Password"
-            // });
             res.json({
                 Id: null,
                 msg: "Invalid username or password"
@@ -79,10 +73,11 @@ router.post("/hsam-admin", (req, res) => {
 });
 
 router.post("/student/accept", (req, res) => {
-    console.log(req.body.UID);
+    // console.log(req.body.UID);
     Studentmodel.findOne({ UID: req.body.UID }, (err, Data) => {
         if (!err) {
             if (Data) {
+                console.log(Data.UID);
                 acceptmodel.findOne({ UID: req.body.UID}, (err, result) => { 
                         if (!result) {  
                             const acceptstud = new acceptmodel({
@@ -104,6 +99,26 @@ router.post("/student/accept", (req, res) => {
                                 if (err) {
                                     console.log(err);
                                 } else {
+                                    var mailOptions = {
+                                        from: 'hsadmissionmanagement@gmail.com',
+                                        to: Data.Email,
+                                        subject: 'Application Accepted',
+                                        text: `Hello!
+                                        Thank you for applying for admission through admission management system. We are happy to inform you that your application has been accepted in our highschool.
+                                        You will have to visit the college with original documents for further process of admission before 27th May 2022
+                                        We wish you the best and look forward interacting with you.
+                                
+                                        Regards
+                                        HSAM`
+                                      };
+                                      
+                                      mailer.sendMail(mailOptions, function(error, info){
+                                        if (error) {
+                                          console.log(error);
+                                        } else {
+                                          console.log('Email sent: ' + info.response);
+                                        }
+                                      });
                                     console.log("Save");
                                 }
                             });
@@ -160,7 +175,26 @@ router.post("/student/reject", (req, res) => {
                             if (err) {
                                 console.log(err);
                             } else {
-                                console.log("Save!");
+                                var mailOptions = {
+                                    from: 'hsadmissionmanagement@gmail.com',
+                                    to: Data.Email,
+                                    subject: 'Application Rejected',
+                                    text: `Hello!
+                                    Thank you for applying for admission through admission management system. We are sorry to inform you that your application has been REJECTED in our highschool.
+                                    We wish you the best for your future applications and you can reapply for CAP-2 before 27th May 2022
+                                    
+                                    Regards
+                                    HSAM`
+                                  };
+                                  
+                                  mailer.sendMail(mailOptions, function(error, info){
+                                    if (error) {
+                                      console.log(error);
+                                    } else {
+                                      console.log('Email sent: ' + info.response);
+                                    }
+                                  });
+                                console.log("Save");
                             }
                         });
                     }

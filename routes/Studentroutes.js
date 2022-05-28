@@ -50,27 +50,36 @@ router.route("/:id")
 
 
 router.route("/")
-  .post(upload.fields([{ name: "markSheet10th" }, { name: "incomeCertificate" }, { name: "castCertificate" }]), (req, res) => {
+  .post(upload.fields([{ name: "markSheet10th" }, { name: "incomeCertificate" }, { name: "castCertificate" },{ name: "leavingCertificate" }]), (req, res) => {
 
-    //console.log(req.body.cast);
+    console.log(req.body);
     let tenthmarksheet;
     let incomeCertificate;
     let castCertificate;
+    let leavingCertificate;
 
     Studentmodel.findOne({ UID: req.body.uid }, (err, result) => {
       if (!result) {
         console.log("user not found");
 
+        console.log(req.files.incomeCertificate);
+
         tenthmarksheet = req.files.markSheet10th;
         incomeCertificate = req.files.incomeCertificate;
         castCertificate = req.files.castCertificate;
+        leavingCertificate = req.files.leavingCertificate;
 
+        
         tenthmarksheet.forEach(element => {
           tenthmarksheet = element.filename;
-        });
+        }); 
 
         incomeCertificate.forEach(element => {
           incomeCertificate = element.filename;
+        });
+
+        leavingCertificate.forEach(element=>{
+          leavingCertificate = element.filename;
         });
 
         if (req.body.cast != "open") {
@@ -79,20 +88,25 @@ router.route("/")
           });
         } else {
           castCertificate = "NULL";
-        }
+        } 
 
         const data = new Studentmodel({
           UID: req.body.uid,
           Name: req.body.name,
           DOB: req.body.birthDate,
           Gender: req.body.gender,
+          MobileNo:req.body.studentMobNo,
           Email: req.body.email,
+          FatherName: req.body.fatherName,
+          FatherMobile: req.body.fatherMobNo,
           Address: req.body.address,
           SchoolName: req.body.schoolName,
           TenthMarks: req.body.marks10th,
           TenthMarksheet: tenthmarksheet,
+          LeavingCertificate: leavingCertificate,
           Cast: req.body.cast,
           CastCertificate: castCertificate,
+          AnnualIncome: req.body.annualIncome,
           incomeCertificate: incomeCertificate,
         });
 
@@ -109,6 +123,7 @@ router.route("/")
             console.log(err);
           }
         });
+        console.log(req.body.fatherName);
       } else {
 
         if (req.files) {
@@ -130,6 +145,12 @@ router.route("/")
             });
           }
 
+          if (leavingCertificate != undefined) {
+            leavingCertificate.forEach(element => {
+              leavingCertificate = element.filename;
+            });
+          }
+
           if (req.body.cast != "open") {
             if (castCertificate != undefined) {
               castCertificate.forEach(element => {
@@ -143,16 +164,22 @@ router.route("/")
         }
         let data = {
           $set: {
+            UID: req.body.uid,
             Name: req.body.name,
             DOB: req.body.birthDate,
             Gender: req.body.gender,
+            MobileNo:req.body.studentMobNo,
             Email: req.body.email,
+            FatherName: req.body.fatherName,
+            FatherMobile: req.body.fatherMobNo,
             Address: req.body.address,
             SchoolName: req.body.schoolName,
             TenthMarks: req.body.marks10th,
             TenthMarksheet: tenthmarksheet,
+            LeavingCertificate: leavingCertificate,
             Cast: req.body.cast,
             CastCertificate: castCertificate,
+            AnnualIncome: req.body.annualIncome,
             incomeCertificate: incomeCertificate,
           }
         };

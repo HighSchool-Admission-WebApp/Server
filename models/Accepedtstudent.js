@@ -61,3 +61,4 @@ const acceptSchema = mongoose.Schema({
 const acceptstudent = mongoose.model("acceptedstudent",acceptSchema);
 
 module.exports = acceptstudent;
+

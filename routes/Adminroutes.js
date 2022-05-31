@@ -17,7 +17,6 @@ router.get("/getAllStudents", (req, res) => {
                 res.json(
                     result
                 );
-                // console.log(result);
             } else {
                 res.json({
                     msg: "No any Student Data Found!"
@@ -30,6 +29,49 @@ router.get("/getAllStudents", (req, res) => {
         }
     });
 });
+
+
+router.get("/getallacceptedstudents", (req, res) => {
+    acceptmodel.find({}, (err, result) => {
+        if (!err) {
+            if (result) {
+                res.json(
+                    result
+                );
+            } else {
+                res.json({
+                    msg: "No any Student Data Found!"
+                });
+            }
+        } else {
+            res.json({
+                msg: "Something went wrong !Pls Try Agian Later"
+            });
+        }
+    });
+});
+
+
+router.get("/getallrejectedstudents", (req, res) => {
+    rejectmodel.find({}, (err, result) => {
+        if (!err) {
+            if (result) {
+                res.json(
+                    result
+                );
+            } else {
+                res.json({
+                    msg: "No any Student Data Found!"
+                });
+            }
+        } else {
+            res.json({
+                msg: "Something went wrong !Pls Try Agian Later"
+            });
+        }
+    });
+});
+
 
 
 router.route("/getStudent/:id")
@@ -85,23 +127,23 @@ router.post("/student/accept", (req, res) => {
                 acceptmodel.findOne({ UID: req.body.UID }, (err, result) => {
                     if (!result) {
                         const acceptstud = new acceptmodel({
-                            UID: req.body.uid,
-                            Name: req.body.name,
-                            DOB: req.body.birthDate,
-                            Gender: req.body.gender,
-                            MobileNo: req.body.studentMobNo,
-                            Email: req.body.email,
-                            FatherName: req.body.fatherName,
-                            FatherMobile: req.body.fatherMobNo,
-                            Address: req.body.address,
-                            SchoolName: req.body.schoolName,
-                            TenthMarks: req.body.marks10th,
-                            TenthMarksheet: tenthmarksheet,
-                            LeavingCertificate: leavingCertificate,
-                            Cast: req.body.cast,
-                            CastCertificate: castCertificate,
-                            AnnualIncome: req.body.annualIncome,
-                            incomeCertificate: incomeCertificate,
+                            UID: Data.uid,
+                            Name: Data.name,
+                            DOB: Data.birthDate,
+                            Gender: Data.gender,
+                            MobileNo: Data.studentMobNo,
+                            Email: Data.email,
+                            FatherName: Data.fatherName,
+                            FatherMobile: Data.fatherMobNo,
+                            Address: Data.address,
+                            SchoolName: Data.schoolName,
+                            TenthMarks: Data.marks10th,
+                            TenthMarksheet: Data.tenthmarksheet,
+                            LeavingCertificate: Data.leavingCertificate,
+                            Cast: Data.cast,
+                            CastCertificate: Data.castCertificate,
+                            AnnualIncome: Data.annualIncome,
+                            incomeCertificate: Data.incomeCertificate,
                         });
 
                         acceptstud.save((err) => {
@@ -158,25 +200,24 @@ router.post("/student/reject", (req, res) => {
                 //  console.log(Data);
                 rejectmodel.findOne({ UID: req.body.UID }, (err, data) => {
                     if (!data) {
-                        // console.log(Data.Name);
                         const rejectstud = new rejectmodel({
-                            UID: req.body.uid,
-                            Name: req.body.name,
-                            DOB: req.body.birthDate,
-                            Gender: req.body.gender,
-                            MobileNo: req.body.studentMobNo,
-                            Email: req.body.email,
-                            FatherName: req.body.fatherName,
-                            FatherMobile: req.body.fatherMobNo,
-                            Address: req.body.address,
-                            SchoolName: req.body.schoolName,
-                            TenthMarks: req.body.marks10th,
-                            TenthMarksheet: tenthmarksheet,
-                            LeavingCertificate: leavingCertificate,
-                            Cast: req.body.cast,
-                            CastCertificate: castCertificate,
-                            AnnualIncome: req.body.annualIncome,
-                            incomeCertificate: incomeCertificate,
+                            UID: Data.uid,
+                            Name: Data.name,
+                            DOB: Data.birthDate,
+                            Gender: Data.gender,
+                            MobileNo: Data.studentMobNo,
+                            Email: Data.email,
+                            FatherName: Data.fatherName,
+                            FatherMobile: Data.fatherMobNo,
+                            Address: Data.address,
+                            SchoolName: Data.schoolName,
+                            TenthMarks: Data.marks10th,
+                            TenthMarksheet: Data.tenthmarksheet,
+                            LeavingCertificate: Data.leavingCertificate,
+                            Cast: Data.cast,
+                            CastCertificate: Data.castCertificate,
+                            AnnualIncome: Data.annualIncome,
+                            incomeCertificate: Data.incomeCertificate,
                         });
 
                         rejectstud.save((err) => {

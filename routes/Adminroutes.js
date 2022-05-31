@@ -10,6 +10,7 @@ const mailer = require("../middleware/nodemailer.js");
 const AcceptText = require("../MailMessage/acceptmessage.js");
 const RejectText = require("../MailMessage/rejectmessage.js")
 
+// Get All Students Route
 router.get("/getAllStudents", (req, res) => {
     Studentmodel.find({}, (err, result) => {
         if (!err) {
@@ -30,7 +31,7 @@ router.get("/getAllStudents", (req, res) => {
     });
 });
 
-
+// Get Accepted and Rejected Students Routes
 router.get("/getallacceptedstudents", (req, res) => {
     acceptmodel.find({}, (err, result) => {
         if (!err) {
@@ -73,10 +74,9 @@ router.get("/getallrejectedstudents", (req, res) => {
 });
 
 
-
+// Get Students with uid
 router.route("/getStudent/:id")
     .get((req, res) => {
-        // console.log(req.params.id)
         Studentmodel.findOne({ UID: req.params.id }, (err, data) => {
             if (!err) {
                 if (data) {
@@ -98,25 +98,28 @@ router.route("/getStudent/:id")
         });
     })
 
+
+    
+//Hsam-admin Login
+
 router.post("/hsam-admin", (req, res) => {
-    // console.log(req)
-    adminmodel.findOne({ Email: req.body.email, Password: req.body.password }, (err, result) => {
-        console.log(req.body)
+    adminmodel.findOne({ UID: req.body.UID }, (err, result) => {
         if (result) {
             res.json({
-                Id: result._id,
-                msg: "valid usrname and password"
+                msg: "True"
             })
             console.log("Login Sucessfully!");
         } else {
             res.json({
-                Id: null,
-                msg: "Invalid username or password"
+                msg: "False"
             })
             console.log("Invalid username or password");
         }
     });
 });
+
+
+//Accepte is Students Route
 
 router.post("/student/accept", (req, res) => {
     // console.log(req.body.UID);
@@ -126,23 +129,23 @@ router.post("/student/accept", (req, res) => {
                 console.log(Data.UID);
                 acceptmodel.findOne({ UID: req.body.UID }, (err, result) => {
                     if (!result) {
-                        const acceptstud = new acceptmodel({
-                            UID: Data.uid,
-                            Name: Data.name,
-                            DOB: Data.birthDate,
-                            Gender: Data.gender,
-                            MobileNo: Data.studentMobNo,
-                            Email: Data.email,
-                            FatherName: Data.fatherName,
-                            FatherMobile: Data.fatherMobNo,
-                            Address: Data.address,
-                            SchoolName: Data.schoolName,
-                            TenthMarks: Data.marks10th,
-                            TenthMarksheet: Data.tenthmarksheet,
-                            LeavingCertificate: Data.leavingCertificate,
-                            Cast: Data.cast,
-                            CastCertificate: Data.castCertificate,
-                            AnnualIncome: Data.annualIncome,
+                        const acceptstud = new acceptmodel({ 
+                            UID: Data.UID,
+                            Name: Data.Name,
+                            DOB: Data.DOB,
+                            Gender: Data.Gender,
+                            MobileNo: Data.MobileNo,
+                            Email: Data.Email,
+                            FatherName: Data.FatherName,
+                            FatherMobile: Data.FatherMobile,
+                            Address: Data.Address,
+                            SchoolName: Data.SchoolName,
+                            TenthMarks: Data.TenthMarks,
+                            TenthMarksheet: Data.TenthMarksheet,
+                            LeavingCertificate: Data.LeavingCertificate,
+                            Cast: Data.Cast,
+                            CastCertificate: Data.CastCertificate,
+                            AnnualIncome: Data.AnnualIncome,
                             incomeCertificate: Data.incomeCertificate,
                         });
 
@@ -172,7 +175,7 @@ router.post("/student/accept", (req, res) => {
                 })
             } else {
                 res.json({
-                    mag: "Studnet Not Found"
+                    msg: "Studnet Not Found"
                 });
             }
         } else {
@@ -192,31 +195,35 @@ router.post("/student/accept", (req, res) => {
     });
 });
 
+
+
+//Students is rejected Route
+
 router.post("/student/reject", (req, res) => {
 
     Studentmodel.findOne({ UID: req.body.UID }, (err, Data) => {
         if (!err) {
             if (Data) {
-                //  console.log(Data);
+                 console.log(Data);
                 rejectmodel.findOne({ UID: req.body.UID }, (err, data) => {
                     if (!data) {
                         const rejectstud = new rejectmodel({
-                            UID: Data.uid,
-                            Name: Data.name,
-                            DOB: Data.birthDate,
-                            Gender: Data.gender,
-                            MobileNo: Data.studentMobNo,
-                            Email: Data.email,
-                            FatherName: Data.fatherName,
-                            FatherMobile: Data.fatherMobNo,
-                            Address: Data.address,
-                            SchoolName: Data.schoolName,
-                            TenthMarks: Data.marks10th,
-                            TenthMarksheet: Data.tenthmarksheet,
-                            LeavingCertificate: Data.leavingCertificate,
-                            Cast: Data.cast,
-                            CastCertificate: Data.castCertificate,
-                            AnnualIncome: Data.annualIncome,
+                            UID: Data.UID,
+                            Name: Data.Name,
+                            DOB: Data.DOB,
+                            Gender: Data.Gender,
+                            MobileNo: Data.MobileNo,
+                            Email: Data.Email,
+                            FatherName: Data.FatherName,
+                            FatherMobile: Data.FatherMobile,
+                            Address: Data.Address,
+                            SchoolName: Data.SchoolName,
+                            TenthMarks: Data.TenthMarks,
+                            TenthMarksheet: Data.TenthMarksheet,
+                            LeavingCertificate: Data.LeavingCertificate,
+                            Cast: Data.Cast,
+                            CastCertificate: Data.CastCertificate,
+                            AnnualIncome: Data.AnnualIncome,
                             incomeCertificate: Data.incomeCertificate,
                         });
 

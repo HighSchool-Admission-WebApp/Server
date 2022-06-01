@@ -96,10 +96,37 @@ router.route("/getStudent/:id")
                 console.log(err);
             }
         });
-    })
+    });
 
 
+// Get Rejected Students with uid
+
+    router.route("/getrejectedstudent")
+    .get((req, res) => {
+        rejectmodel.findOne({ UID: req.body.UID }, (err, data) => {
+            if (!err) {
+                if (data) {
+                    res.json({
+                        StudentData: data,
+                        msg: "Sucess"
+                    });
+                } else {
+                    res.json({
+                        msg: "No Student Found in database!"
+                    })
+                }
+            } else {
+                res.json({
+                    msg: "Error in database! try agian"
+                });
+                console.log(err);
+            }
+        });
+    });
     
+
+
+
 //Hsam-admin Login
 
 router.post("/hsam-admin", (req, res) => {
@@ -143,6 +170,7 @@ router.post("/student/accept", (req, res) => {
                             TenthMarks: Data.TenthMarks,
                             TenthMarksheet: Data.TenthMarksheet,
                             LeavingCertificate: Data.LeavingCertificate,
+                            Program : Data.program,
                             Cast: Data.Cast,
                             CastCertificate: Data.CastCertificate,
                             AnnualIncome: Data.AnnualIncome,
@@ -221,6 +249,7 @@ router.post("/student/reject", (req, res) => {
                             TenthMarks: Data.TenthMarks,
                             TenthMarksheet: Data.TenthMarksheet,
                             LeavingCertificate: Data.LeavingCertificate,
+                            Program : Data.program,
                             Cast: Data.Cast,
                             CastCertificate: Data.CastCertificate,
                             AnnualIncome: Data.AnnualIncome,

@@ -19,7 +19,7 @@ router.route("/:id")
             state: "No Action"
           });
           console.log("Sucess");
-        } else {
+        }else{
           acceptmodel.findOne({ UID: req.params.id }, (err, data) => {
             if (data) {
               res.json({
@@ -28,40 +28,49 @@ router.route("/:id")
               });
               console.log("Sucess!");
             }else{
-              res.json({
-                StudentData: {
-                   UID :" ",
-                   Name :" ",
-                   DOB :" ",
-                   Gender :" ",
-                   MobileNo :" ",
-                   Email :" ",
-                   FatherName :" ",
-                   FatherMobile :" ",
-                   Address :" ",
-                   SchoolName :" ",
-                   TenthMarks :" ",
-                   TenthMarksheet :" ",
-                   LeavingCertificate :" ",
-                   Religion :" ",
-                   Cast :" ",
-                   CastCertificate :" ",
-                   AnnualIncome :" ",
-                   incomeCertificate:" ",
-                },
-                state:"Rejected"
-              })
-            }
-          });
-        }
-      } else {
+              rejectmodel.findOne({ UID: req.params.id }, (err, data) => {
+                if (data) {
+                  res.json({
+                    StudentData: {
+                         UID :"",
+                         Name :"",
+                         DOB :"",
+                         Gender :"",
+                         MobileNo :"",
+                         Email :"",
+                         FatherName :"",
+                         FatherMobile :"",
+                         Address :"",
+                         SchoolName :"",
+                         TenthMarks :"",
+                         TenthMarksheet :"",
+                         LeavingCertificate :"",
+                         Program :"",
+                         Cast :"",
+                         CastCertificate :"",
+                         AnnualIncome :"",
+                         incomeCertificate:"",
+                      },
+                      state:"Rejected"
+                  });
+                  console.log("Sucess!");
+                }else{
+                  res.json({
+                    state:""
+                  });
+                }
+            });
+          }
+        });
+      }
+      }else {
         res.json({
           msg: "Error in database! try agian"
         });
         console.log(err);
       }
     });
-  })
+  });
 
 
 router.route("/")
@@ -128,6 +137,7 @@ router.route("/")
           TenthMarks: req.body.marks10th,
           TenthMarksheet: tenthmarksheet,
           LeavingCertificate: leavingCertificate,
+          Program : req.body.program,
           Cast: req.body.cast,
           CastCertificate: castCertificate,
           AnnualIncome: req.body.annualIncome,
@@ -198,6 +208,7 @@ router.route("/")
             TenthMarks: req.body.marks10th,
             TenthMarksheet: tenthmarksheet,
             LeavingCertificate: leavingCertificate,
+            Program : req.body.program,
             Cast: req.body.cast,
             CastCertificate: castCertificate,
             AnnualIncome: req.body.annualIncome,

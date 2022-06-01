@@ -29,3 +29,27 @@ app.use("/poststudentinfo",Studentroutes);
 app.listen("8080",function(){
    console.log("your server stared on port 8080");
 });
+
+
+
+// StudentData: {
+//    UID :"",
+//    Name :"",
+//    DOB :"",
+//    Gender :"",
+//    MobileNo :" ",
+//    Email :" ",
+//    FatherName :" ",
+//    FatherMobile :" ",
+//    Address :" ",
+//    SchoolName :" ",
+//    TenthMarks :" ",
+//    TenthMarksheet :" ",
+//    LeavingCertificate :" ",
+//    Religion :" ",
+//    Cast :" ",
+//    CastCertificate :" ",
+//    AnnualIncome :" ",
+//    incomeCertificate:" ",
+// },
+// state:"Rejected"

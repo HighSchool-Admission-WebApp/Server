@@ -40,7 +40,7 @@ const acceptSchema = mongoose.Schema({
    LeavingCertificate : {
      type : String,
    },
-   Religion : {
+   Program : {
      type : String,
    },
    Cast : {

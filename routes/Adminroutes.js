@@ -157,7 +157,7 @@ router.post("/student/accept", (req, res) => {
                                     from: process.env.USER,
                                     to: Data.Email,
                                     subject: 'Application Accepted',
-                                    text: AcceptText
+                                    text: AcceptText,
                                 };
 
                                 mailer.sendMail(mailOptions, function (error, info) {

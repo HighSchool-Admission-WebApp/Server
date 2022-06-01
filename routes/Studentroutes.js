@@ -14,34 +14,48 @@ router.route("/:id")
     Studentmodel.findOne({ UID: req.params.id }, (err, data) => {
       if (!err) {
         if (data) {
-          res.status(200).send({
+          res.json({
             StudentData: data,
-            msg: "Sucess!"
+            state: "No Action"
           });
           console.log("Sucess");
         } else {
           acceptmodel.findOne({ UID: req.params.id }, (err, data) => {
             if (data) {
-              res.status(200).send({
+              res.json({
                 StudentData: data,
-                msg: "Sucess!!"
+                state: "Accepted"
               });
               console.log("Sucess!");
-            } else {
-              rejectmodel.findOne({ UID: req.params.id }, (err, data) => {
-                if (data) {
-                  res.status(200).send({
-                    StudentData: data,
-                    msg: "Sucess!!!"
-                  });
-                  console.log("Sucess!!");
-                }
-              });
+            }else{
+              res.json({
+                StudentData: {
+                   UID :" ",
+                   Name :" ",
+                   DOB :" ",
+                   Gender :" ",
+                   MobileNo :" ",
+                   Email :" ",
+                   FatherName :" ",
+                   FatherMobile :" ",
+                   Address :" ",
+                   SchoolName :" ",
+                   TenthMarks :" ",
+                   TenthMarksheet :" ",
+                   LeavingCertificate :" ",
+                   Religion :" ",
+                   Cast :" ",
+                   CastCertificate :" ",
+                   AnnualIncome :" ",
+                   incomeCertificate:" ",
+                },
+                state:"Rejected"
+              })
             }
           });
         }
       } else {
-        res.status(400).send({
+        res.json({
           msg: "Error in database! try agian"
         });
         console.log(err);
@@ -51,49 +65,61 @@ router.route("/:id")
 
 
 router.route("/")
-  .post(upload.fields([{ name: "markSheet10th" }, { name: "incomeCertificate" }, { name: "castCertificate" },{ name: "leavingCertificate" }]), (req, res) => {
+  .post(upload.fields([{ name: "markSheet10th" }, { name: "incomeCertificate" }, { name: "castCertificate" }, { name: "leavingCertificate" }]), (req, res) => {
 
-    let tenthmarksheet;
-    let incomeCertificate;
-    let castCertificate;
-    let leavingCertificate;
+    var tenthmarksheet;
+    var incomeCertificate;
+    var castCertificate;
+    var leavingCertificate;
+
 
     Studentmodel.findOne({ UID: req.body.uid }, (err, result) => {
       if (!result) {
         console.log("user not found");
 
-        tenthmarksheet = req.files.markSheet10th;
-        incomeCertificate = req.files.incomeCertificate;
-        castCertificate = req.files.castCertificate;
-        leavingCertificate = req.files.leavingCertificate;
+        if (req.files) {
 
-        
-        tenthmarksheet.forEach(element => {
-          tenthmarksheet = element.filename;
-        }); 
+          tenthmarksheet = req.files.markSheet10th;
+          incomeCertificate = req.files.incomeCertificate;
+          castCertificate = req.files.castCertificate;
+          leavingCertificate = req.files.leavingCertificate;
 
-        incomeCertificate.forEach(element => {
-          incomeCertificate = element.filename;
-        });
+          if (tenthmarksheet != undefined && incomeCertificate != undefined && leavingCertificate != undefined) {
+            tenthmarksheet.forEach(element => {
+              tenthmarksheet = element.filename;
+            });
+            
+            incomeCertificate.forEach(element => {
+              incomeCertificate = element.filename;
+            });
 
-        leavingCertificate.forEach(element=>{
-          leavingCertificate = element.filename;
-        });
+            leavingCertificate.forEach(element => {
+              leavingCertificate = element.filename;
+            });
 
-        if (req.body.cast != "open") {
-          castCertificate.forEach(element => {
-            castCertificate = element.filename;
-          });
+          }
+
+          if (req.body.cast != "open") {
+            if (castCertificate != undefined) {
+              castCertificate.forEach(element => {
+                castCertificate = element.filename;
+              });
+            }
+          } else {
+            castCertificate = "NULL";
+          }
         } else {
-          castCertificate = "NULL";
-        } 
+          res.json({
+            msg: "Please Select All Required Files!"
+          })
+        }
 
         const data = new Studentmodel({
           UID: req.body.uid,
           Name: req.body.name,
           DOB: req.body.birthDate,
           Gender: req.body.gender,
-          MobileNo:req.body.studentMobNo,
+          MobileNo: req.body.studentMobNo,
           Email: req.body.email,
           FatherName: req.body.fatherName,
           FatherMobile: req.body.fatherMobNo,
@@ -110,12 +136,12 @@ router.route("/")
 
         data.save((err) => {
           if (!err) {
-            res.status(200).send({
+            res.json({
               msg: "UserData Uploaded Sucessfully"
             });
             console.log("Data Uploaded Sucessfully!");
           } else {
-            res.status(500).send({
+            res.json({
               msg: "Somthing went wrong try agian!"
             });
             console.log(err);
@@ -163,7 +189,7 @@ router.route("/")
             Name: req.body.name,
             DOB: req.body.birthDate,
             Gender: req.body.gender,
-            MobileNo:req.body.studentMobNo,
+            MobileNo: req.body.studentMobNo,
             Email: req.body.email,
             FatherName: req.body.fatherName,
             FatherMobile: req.body.fatherMobNo,
@@ -196,19 +222,6 @@ router.route("/")
 
 
   });
-
-// router.route("/:id")
-//   .get((req, res) => {
-//     //const id = "6266becab1350c2800ae4702";
-//     const id = (req.params.id);
-//     Studentmodel.findByIdAndDelete(id, (err, docs) => {
-//       if (!err) {
-//         console.log(docs);
-//       } else {
-//         console.log(err);
-//       }
-//     });
-//   });
 
 
 module.exports = router;

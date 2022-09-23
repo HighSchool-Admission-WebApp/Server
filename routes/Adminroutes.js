@@ -8,7 +8,7 @@ const acceptmodel = require("../models/Accepedtstudent.js");
 const rejectmodel = require("../models/Rejectedstudent.js");
 const mailer = require("../middleware/nodemailer.js");
 const AcceptText = require("../MailMessage/acceptmessage.js");
-const RejectText = require("../MailMessage/rejectmessage.js")
+const RejectText = require("../MailMessage/rejectmessage.js");
 
 // Get All Students Route
 router.get("/getAllStudents", (req, res) => {
@@ -101,9 +101,11 @@ router.route("/getStudent/:id")
 
 // Get Rejected Students with uid
 
-    router.route("/getrejectedstudent")
+    router.route("/getrejectedstudent/:id")
     .get((req, res) => {
-        rejectmodel.findOne({ UID: req.body.UID }, (err, data) => {
+        console.log("id ->rejected")
+        rejectmodel.findOne({ UID: req.params.id }, (err, data) => {
+            console.log(req.params.id);
             if (!err) {
                 if (data) {
                     res.json({
@@ -128,7 +130,6 @@ router.route("/getStudent/:id")
 
 
 //Hsam-admin Login
-
 router.post("/hsam-admin", (req, res) => {
     adminmodel.findOne({ UID: req.body.UID }, (err, result) => {
         if (result) {
@@ -195,6 +196,9 @@ router.post("/student/accept", (req, res) => {
                                         console.log('Email sent: ' + info.response);
                                     }
                                 });
+                                res.json({
+                                    state:true
+                                })
                                 console.log("Save");
                             }
                         });
@@ -203,12 +207,12 @@ router.post("/student/accept", (req, res) => {
                 })
             } else {
                 res.json({
-                    msg: "Studnet Not Found"
-                });
+                    state:false
+                })
             }
         } else {
             res.json({
-                msg: "error in database!"
+                state:false
             })
             console.log(err);
         }
@@ -274,6 +278,9 @@ router.post("/student/reject", (req, res) => {
                                         console.log('Email sent: ' + info.response);
                                     }
                                 });
+                                res.json({
+                                    state:true
+                                })
                                 console.log("Save");
                             }
                         });
@@ -281,12 +288,12 @@ router.post("/student/reject", (req, res) => {
                 });
             } else {
                 res.json({
-                    mag: "Studnet Not Found"
+                    state:false
                 })
             }
         } else {
             res.json({
-                msg: "error in database!"
+                state:false
             })
             console.log(err);
         }

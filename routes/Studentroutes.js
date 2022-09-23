@@ -143,7 +143,7 @@ router.route("/")
           AnnualIncome: req.body.annualIncome,
           incomeCertificate: incomeCertificate,
         });
-
+     console.log(req.body.program);
         data.save((err) => {
           if (!err) {
             res.json({
